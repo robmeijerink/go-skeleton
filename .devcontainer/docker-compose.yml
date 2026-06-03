@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  api:
+    image: golang:1.26-alpine
+    container_name: skeleton_api
+    working_dir: /app
+    volumes:
+      - ../:/app
+      # Cache Go modules to speed up package installation and air installation
+      - go_cache:/go/pkg/mod
+    # Install and Start Air on-the-fly (caches after first time)
+    command: sh -c "go install github.com/air-verse/air@latest && air -c .air.toml"
+    ports:
+      - "8080:8080"
+
+volumes:
+  go_cache:

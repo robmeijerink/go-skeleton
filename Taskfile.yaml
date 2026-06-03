@@ -1,0 +1,74 @@
+version: "3"
+
+includes:
+  local:
+    taskfile: Taskfile.local.yml
+    optional: true
+
+tasks:
+  # ==========================================
+  # 💻 SYSTEM
+  # ==========================================
+  default:
+    desc: Open search window task
+    silent: true
+    cmds:
+      - task: search
+
+  search:
+    desc: Open search window
+    silent: true
+    cmds:
+      - |
+        CHOICE=$(task --list | grep '^\*' | grep -vE 'default|search' | fzf --reverse --border="rounded" --prompt="🚀 Search Task: " --pointer="👉")
+        if [ -n "$CHOICE" ]; then
+          TASK_NAME=$(echo "$CHOICE" | awk '{print $2}' | sed 's/:$//')
+          echo -e "\033[1;32mRunning:\033[0m task $TASK_NAME\n"
+          task "$TASK_NAME"
+        fi
+
+  # ==========================================
+  # 🚀 MAIN
+  # ==========================================
+  build:
+    desc: Compile app to binary
+    cmds:
+      - |
+        echo "Building Go 1.26 binary (Static) via Compose..."
+        docker compose -f .devcontainer/docker-compose.yml run --rm api sh -c "CGO_ENABLED=0 go build -o my_app main.go"
+        echo "Build complete: my_app"
+
+  run:
+    desc: Start the app interactively (via Docker Compose with Air)
+    cmds:
+      - |
+        echo "Starting environment via Compose..."
+        docker compose -f .devcontainer/docker-compose.yml up
+
+  test:
+    desc: Run project tests
+    cmds:
+      - |
+        echo "Running Go Tests via Compose..."
+        docker compose -f .devcontainer/docker-compose.yml run --rm api go test -v -race ./...
+
+  get:
+    desc: Install a new Go package via Docker
+    cmds:
+      - |
+        echo "Installing: {{.CLI_ARGS}} via Compose..."
+        docker compose -f .devcontainer/docker-compose.yml run --rm api sh -c "go get {{.CLI_ARGS}} && go mod tidy"
+        echo "Done!"
+
+  tidy:
+    desc: Run go mod tidy (install dependencies)
+    cmds:
+      - |
+        echo "Running go mod tidy via Compose..."
+        docker compose -f .devcontainer/docker-compose.yml run --rm api go mod tidy
+
+  clean:
+    desc: Remove the compiled binary and shut down containers
+    cmds:
+      - docker compose -f .devcontainer/docker-compose.yml down
+      - rm -f my_app

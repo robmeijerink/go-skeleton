@@ -1,0 +1,37 @@
+name: Deploy Application
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    name: Run Backend Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: ">=1.26.0"
+          cache: true
+
+      - name: Install Go Dependencies
+        run: go mod download
+
+      - name: Run Tests
+        run: go test -v -race ./...
+
+  deploy:
+    environment: production
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.26"

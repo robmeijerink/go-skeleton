@@ -1,0 +1,32 @@
+# Compiled binaries and build outputs
+my_app
+
+bin/
+tmp/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test and coverage reports
+*.test
+*.out
+coverage.html
+
+# Go workspace and dependencies
+vendor/
+node_modules/
+go.work
+go.work.sum
+
+# Environment variables
+.env
+*.env
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store

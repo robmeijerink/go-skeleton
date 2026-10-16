@@ -4,7 +4,7 @@ A minimalist, container-first boilerplate for starting new Go projects. This tem
 
 ## Features
 
-* **Zero Local Go Dependency:** All build, test, and run commands execute inside isolated `golang:1.26-alpine` Docker containers.
+* **Zero Local Go Dependency:** All build, test, and run commands execute inside isolated `golang:1.26-trixie` Docker containers.
 * **Taskfile Automation:** Simplified command execution with an interactive UI (replaces Makefiles).
 * **Hot Reloading:** Pre-configured with Air (`.air.toml`) for fast development cycles.
 * **Clean Architecture:** Infrastructure config is neatly tucked away in the `.devcontainer/` directory (also enables one-click Dev Containers).
@@ -36,6 +36,10 @@ cd your-new-project
 ### 3. Initialize the Go Module
 To keep this skeleton bloat-free, it does not include a `go.mod`. Initialize it using the Dockerized Go environment:
 
+```bash
+task init -- github.com/your-org/your-new-project
+```
+
 ## Available Commands
 
 This template uses `Taskfile.yaml` to manage standard development operations.
@@ -44,6 +48,7 @@ Run `task` without any arguments to open the interactive `fzf` search menu, or r
 
 | Command               | Description |
 | :---                  | :--- |
+| <code>task&nbsp;init&nbsp;&#8209;&#8209;&nbsp;&lt;module&gt;</code> | Initializes the Go module (`go mod init`). |
 | `task build`          | Compiles the application into a static binary (`my_app`). |
 | `task run`            | Runs `main.go` interactively inside a container. |
 | `task test`           | Executes the test suite with the race detector enabled. |

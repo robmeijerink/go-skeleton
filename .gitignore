@@ -22,7 +22,9 @@ go.work.sum
 
 # Environment variables
 .env
+.env.*
 *.env
+!.env.example
 
 # IDE and editor files
 .idea/

@@ -31,6 +31,11 @@ tasks:
           task "$TASK_NAME"
         fi
 
+  init:
+    desc: Initialize the Go module (task init -- github.com/your-org/your-project)
+    cmds:
+      - docker compose -f .devcontainer/docker-compose.yml run --rm api go mod init {{.CLI_ARGS}}
+
   # ==========================================
   # 🚀 MAIN
   # ==========================================

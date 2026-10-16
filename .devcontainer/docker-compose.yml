@@ -1,15 +1,20 @@
 services:
   api:
-    image: golang:1.26-alpine
+    image: golang:1.26-trixie
     working_dir: /app
+    # Forward signals to the app so `docker compose stop` is instant instead of a 10s SIGKILL
+    init: true
     volumes:
       - ../:/app
-      # Cache Go modules to speed up package installation and air installation
-      - go_cache:/go/pkg/mod
-    # Install and Start Air on-the-fly (caches after first time)
-    command: sh -c "go install github.com/air-verse/air@latest && air -c .air.toml"
+      # Cache modules, installed tools (Air) and build output between runs
+      - go:/go
+      - go_build:/root/.cache/go-build
+    # Install Air on-the-fly (pinned; cached after first time) and start it
+    command: sh -c "go install github.com/air-verse/air@v1.67.4 && air -c .air.toml"
+    # Bound to localhost only; the app itself must listen on 0.0.0.0 inside the container
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
 
 volumes:
-  go_cache:
+  go:
+  go_build:

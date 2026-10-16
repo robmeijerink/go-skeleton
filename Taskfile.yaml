@@ -5,6 +5,10 @@ includes:
     taskfile: Taskfile.local.yml
     optional: true
 
+# Unique Compose project per checkout (matches the name VS Code Dev Containers uses)
+env:
+  COMPOSE_PROJECT_NAME: '{{regexReplaceAll "[^a-z0-9_-]" (lower (base .ROOT_DIR)) ""}}_devcontainer'
+
 tasks:
   # ==========================================
   # 💻 SYSTEM
